@@ -4,6 +4,10 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 import pymysql
+host="192.168.183.130"
+user = "crawler"
+passwd = "crawler"
+dbname = "test"
 def log_write(info):
     try:
         f = open("D:\crawler\log","a")
@@ -27,7 +31,7 @@ def formdistricts(tag):
     districts_dict = {}
     for item in tag:
         if (isinstance(item, bs4.element.Tag)):
-            districts_dict[item.string] = item['href']
+            districts_dict[item.string] = 'https://'+ 'bj.lianjia.com' + item['href']
     districts_dict.pop('燕郊')
     districts_dict.pop('香河')
     return districts_dict
@@ -56,8 +60,19 @@ def formapartmentdicts(tag):
             log_write('this is apartments_dict')
             log_write(apartments_dict)
     return apartments_dict
-def processdb(info_list):
-    for info_dict in info_list:
+def insert_district(district_dict):
+    if (len(district_dict) == 0):
+        return 1
+    conn = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
+    cursor = conn.cursor()
+    for item in district_dict:
+        sql = "INSERT INTO district (district, district_url) VALUES (%s, %s)"
+        cursor.execute(sql, (item, district_dict[item]))
+    conn.commit()
+    conn.close()
+    return 0
+
+
         
 if __name__ == "__main__":
     servername = 'bj.lianjia.com'
@@ -67,7 +82,8 @@ if __name__ == "__main__":
     soup = BeautifulSoup(demo, 'html.parser')
     districts_tag = soup.find("div", class_ = re.compile('sub_nav section_sub_nav'))
     districts_dict = formdistricts(districts_tag)
-
+    ret = insert_district(districts_dict)
+'''
     #print(districts_dict)
 
     #创建一个多层字典最外层是区县，区县内部的字典是街道和url的字典
@@ -103,3 +119,4 @@ if __name__ == "__main__":
                 log_write(apartment_tag)
                 apartments_list.append(formapartmentdicts(apartment_tag))
                 print(apartments_list)
+'''
