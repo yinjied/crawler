@@ -4,7 +4,7 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 import pymysql
-host="192.168.183.130"
+host="localhost"
 user = "crawler"
 passwd = "crawler"
 dbname = "test"
@@ -70,7 +70,8 @@ def formstreet_list(tag, district):
     streets_list = []
     for item in tag:
         if (isinstance(item, bs4.element.Tag) and item.name == 'a'):
-            streets_list.append([district,item.string,item['href']])
+            street_url = 'https://'+ 'bj.lianjia.com' + item['href']
+            streets_list.append([district,item.string,street_url])
     return streets_list
 
 def insert_street(street_list):
@@ -120,6 +121,7 @@ if __name__ == "__main__":
     '''
     street_tuple = query_table_all('street')
     page_list = []
+    judge_list = []
     for item in street_tuple:
         street_url = item[3]
         street_name = item[2]
@@ -128,15 +130,23 @@ if __name__ == "__main__":
         if isinstance(street_html,str):
             pass
         else:
-            print(street_html)
+            judge_list.append(street_url)
+            print('judge_list:')
+            print(street_url)
+            continue
 
         street_soup = BeautifulSoup(street_html, 'html.parser')
         page_tag = street_soup.find("div", class_ = re.compile('page-box house-lst-page-box'))
+        if page_tag is None:
+            continue
         page_count = eval(page_tag['page-data'])['totalPage']
-        print('***************************************************************************')
         for page in range(page_count):
-            page_url = street_url + "pg" + str(page) + "/"
+            page_url = street_url + "pg" + str(page+1) + "/"
             page_list.append([street_name,str(page),page_url])
+        print('***************************************************************************')
+    print('last')
     print(page_list)
+    print(len(page_list))
+    print(judge_list)
 
 
