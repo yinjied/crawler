@@ -1,5 +1,5 @@
 import pymysql
-host="192.168.183.130"
+host="localhost"
 user = "crawler"
 passwd = "crawler"
 dbname = "test"

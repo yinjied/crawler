@@ -12,7 +12,7 @@ dbname = "test"
 #api for log write
 def log_write(info):
     try:
-        f = open("D:\crawler\log","a")
+        f = open("/var/log/crawler.log","a")
         f.write(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "    " + str(info))
         f.write("\n")
 
@@ -74,6 +74,45 @@ def formstreet_list(tag, district):
             streets_list.append([district,item.string,street_url])
     return streets_list
 
+def formapartment_list(tag, page_url):
+    apartment_list = []
+    for item in tag:
+        if item['class']==['clear', 'LOGCLICKDATA']:
+            title_tag = item.find("div", class_ = re.compile('title'))
+            address_tag = item.find("div", class_ = re.compile('address'))
+            flood_tag = item.find("div", class_ = re.compile('flood'))
+            followinfo_tag = item.find("div", class_ = re.compile('followInfo'))
+            apartment_name = title_tag.a.string
+            apartment_url = title_tag.a['href']
+
+            xiaoqu_name = address_tag.div.a.string
+            xiaoqu_url = address_tag.div.a['href']
+            desc = ''
+            for info in address_tag.strings:
+                desc = desc + info
+            for info in flood_tag.strings:
+                desc = desc + info
+            for info in followinfo_tag.strings:
+                desc = desc + info
+
+            priceInfo_tag = followinfo_tag.find("div", class_ = re.compile('priceInfo'))
+            total_price = priceInfo_tag.div.span.string
+            unit_price = priceInfo_tag.div.next_sibling.span.string
+            '''
+            print(total_price)
+            print(unit_price)
+            print('**************')
+            print(apartment_name)
+            print(apartment_url)
+            print(xiaoqu_name)
+            print(xiaoqu_url)
+            print(desc)
+            '''
+            apartment_list.append([page_url,apartment_name,apartment_url,xiaoqu_name,xiaoqu_url,desc,total_price,unit_price])
+        else:
+            pass
+    return apartment_list
+
 def insert_street(street_list):
     if (len(street_list) == 0):
         return 1
@@ -98,6 +137,19 @@ def insert_page(page_list):
     conn.close()
     return 0
 
+def insert_apartment(apartment_list):
+    if (len(apartment_list) == 0):
+        return 1
+    conn = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
+    cursor = conn.cursor()
+    for item in apartment_list:
+        sql = "INSERT INTO apartment (page_url, apartment_name, apartment_url, xiaoqu_name, xiaoqu_url, info, total_price, unit_price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql, (item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7]))
+    conn.commit()
+    conn.close()
+    return 0
+
+
 
 
 if __name__ == "__main__":
@@ -118,7 +170,7 @@ if __name__ == "__main__":
         streets_tag = district_soup.find("div", class_ = re.compile('sub_sub_nav section_sub_sub_nav'))
         streets_list = formstreet_list(streets_tag, item[1])
         ret = insert_street(streets_list)
-    '''
+    
     street_tuple = query_table_all('street')
     page_list = []
     judge_list = []
@@ -130,7 +182,7 @@ if __name__ == "__main__":
         if isinstance(street_html,str):
             pass
         else:
-            judge_list.append(street_url)
+            judge_list.append([street_name,street_url])
             print('judge_list:')
             print(street_url)
             continue
@@ -145,8 +197,33 @@ if __name__ == "__main__":
             page_list.append([street_name,str(page),page_url])
         print('***************************************************************************')
     print('last')
-    print(page_list)
     print(len(page_list))
+    ret = insert_page(page_list)
+    print(ret)
     print(judge_list)
+    '''
+    page_tuple = query_table_all('page')
 
+    for item in page_tuple:
+        page_url = item[3]
+        page_html = ''
+        while True:
+            page_html = getHTMLText(page_url)
+            if isinstance(page_html,int):
+                print(page_url)
+                continue
+            else:
+                break
+        page_soup = BeautifulSoup(page_html, 'html.parser')
+        page_tag = page_soup.find("ul", class_ = re.compile('sellListContent'))
+        if not (isinstance(page_tag, bs4.element.Tag)):
+            log_write(page_url)
+            print('write the url to var log')
+            continue
+        apartment_list = formapartment_list(page_tag, page_url)
+        print(apartment_list[0])
+        print(len(apartment_list))
+        ret = insert_apartment(apartment_list)
+        print(ret)
+        print('*******************************************************')
 
