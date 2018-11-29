@@ -17,6 +17,14 @@ def log_write(info):
 
     finally:
         f.close()
+def list_write(info):
+    try:
+        f = open("/var/log/xiaoquinfo.log","a")
+        f.write(str(info))
+        f.write("\n")
+
+    finally:
+        f.close()
 def getHTMLText(url):
     try:
         kv = {'user-agent':'Mozilla/5.0'}
