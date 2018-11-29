@@ -83,11 +83,13 @@ for xiaoqu in xiaoqu_tuple:
         if label.span.string == "附近门店":
             break
         item = label.span.next_sibling.string
+        xiaoqu_price = xiaoqu_div.previous_sibling.find("span",class_ = re.compile("xiaoquUnitPrice")).string
         xiaoqu_list.append(item)
+        xiaoqu_list.append(xiaoqu_price)
     xiaoqu_list.append(create_date)
     print(xiaoqu_list)
     print(len(xiaoqu_list))
-    if 10 != len(xiaoqu_list):
+    if 11 != len(xiaoqu_list):
         log_write(xiaoqu_list)
         continue
     list_write(xiaoqu_list)
