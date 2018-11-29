@@ -79,13 +79,13 @@ for xiaoqu in xiaoqu_tuple:
     if not (isinstance(xiaoqu_div, bs4.element.Tag)):
         log_write(xiaoqu_url)
         continue
+    xiaoqu_price = xiaoqu_div.previous_sibling.find("span",class_ = re.compile("xiaoquUnitPrice")).string
     for label in xiaoqu_div:
         if label.span.string == "附近门店":
             break
         item = label.span.next_sibling.string
-        xiaoqu_price = xiaoqu_div.previous_sibling.find("span",class_ = re.compile("xiaoquUnitPrice")).string
         xiaoqu_list.append(item)
-        xiaoqu_list.append(xiaoqu_price)
+    xiaoqu_list.append(xiaoqu_price)
     xiaoqu_list.append(create_date)
     print(xiaoqu_list)
     print(len(xiaoqu_list))
