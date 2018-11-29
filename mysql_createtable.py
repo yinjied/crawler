@@ -1,8 +1,20 @@
 import pymysql
-host="localhost"
+host="139.198.19.54"
 user = "crawler"
 passwd = "crawler"
 dbname = "test"
+'''
+db = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
+cursor = db.cursor()
+sql = """CREATE TABLE xiaoqu (
+         ID INT   AUTO_INCREMENT,
+         xiaoqu_name  varCHAR(100) NOT NULL,
+         xiaoqu_url  varCHAR(200) not null,
+         PRIMARY KEY (ID))"""
+cursor.execute(sql)
+db.close()
+
+
 db = pymysql.connect(host,user,passwd,dbname )
 cursor = db.cursor()
 sql = """CREATE TABLE district (
@@ -45,3 +57,4 @@ sql = """CREATE TABLE apartment (
          PRIMARY KEY (ID))"""
 cursor.execute(sql)
 db.close()
+'''

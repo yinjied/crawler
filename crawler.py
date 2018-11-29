@@ -4,7 +4,7 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 import pymysql
-host="192.168.183.130"
+host="139.198.19.54"
 user = "crawler"
 passwd = "crawler"
 dbname = "test"

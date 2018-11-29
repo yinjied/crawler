@@ -18,4 +18,4 @@ def func():
     conn.commit()
     conn.close()
 
-
+func()
