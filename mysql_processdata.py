@@ -19,3 +19,7 @@ def func():
     conn.close()
 
 
+def test():
+    pass
+
+
