@@ -1,13 +1,32 @@
 from bs4 import BeautifulSoup
-test = """<p>aaa<b>bbb</b></p>"""
-test1 = """<p>
-aaa
-<b>
-bbb
-</b>
-</p>"""
+import datetime
+import requests
+import re
+import pymysql
+import bs4
+host="139.198.19.54"
+user = "crawler"
+passwd = "crawler"
+dbname = "test"
 
-testsoup = BeautifulSoup(test, 'html.parser')
-pretty = BeautifulSoup(test1, 'html.parser')
-print(testsoup.p.contents)
-print(pretty.p.contents)
+def insert_xiaoquinfo(xiaoquinfo_list):
+    conn = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
+    cursor = conn.cursor()
+    for item in xiaoquinfo_list:
+        print(item)
+        sql = "INSERT INTO xiaoquinfo (xiaoqu_name, xiaoqu_url, build_time, build_type, pm_price, pm_compnay, build_company, sum_buildings, sum_apartments, create_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql, item)
+    conn.commit()
+    conn.close()
+
+def read_file_inline():
+    f = open("/var/log/xiaoqu.log","r")
+    xiaoquinfo_list = []
+    xiaoqu_str = f.readlines()
+    xiaoqu_list = xiaoqu_str.split("    ")
+    xiaoqu_list[-1] = xiaoqu_list[-1].strip()
+    xiaoquinfo_list.append(xiaoqu_list)
+    return xiaoquinfo_list
+
+xiaoquinfo_list = read_file_inline()
+#xiaoquinfo_list.append(read_file_inline())
