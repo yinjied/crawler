@@ -22,11 +22,13 @@ def insert_xiaoquinfo(xiaoquinfo_list):
 def read_file_inline():
     f = open("/var/log/xiaoqu.log","r")
     xiaoquinfo_list = []
-    xiaoqu_str = f.readlines()
-    xiaoqu_list = xiaoqu_str.split("    ")
-    xiaoqu_list[-1] = xiaoqu_list[-1].strip()
-    xiaoquinfo_list.append(xiaoqu_list)
+    xiaoqu_strs = f.readlines()
+    for xiaoqu_str in xiaoqu_strs:
+        xiaoqu_list = xiaoqu_str.split("    ")
+        xiaoqu_list[-1] = xiaoqu_list[-1].strip()
+        xiaoquinfo_list.append(xiaoqu_list)
     return xiaoquinfo_list
 
 xiaoquinfo_list = read_file_inline()
-#xiaoquinfo_list.append(read_file_inline())
+print(xiaoquinfo_list)
+print(len(xiaoquinfo_list))
