@@ -87,6 +87,9 @@ for xiaoqu in xiaoqu_tuple:
     xiaoqu_list.append(create_date)
     print(xiaoqu_list)
     print(len(xiaoqu_list))
+    if 10 != len(xiaoqu_list):
+        log_write(xiaoqu_list)
+        continue
     list_write(xiaoqu_list)
     #xiaoquinfo_list.append(xiaoqu_list)
 #insert_xiaoquinfo(xiaoquinfo_list)
