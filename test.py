@@ -87,7 +87,8 @@ for xiaoqu in xiaoqu_tuple:
     xiaoqu_list.append(create_date)
     print(xiaoqu_list)
     print(len(xiaoqu_list))
-    xiaoquinfo_list.append(xiaoqu_list)
-insert_xiaoquinfo(xiaoquinfo_list)
+    list_write(xiaoqu_list)
+    #xiaoquinfo_list.append(xiaoqu_list)
+#insert_xiaoquinfo(xiaoquinfo_list)
  
 
