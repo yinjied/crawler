@@ -14,7 +14,7 @@ def insert_xiaoquinfo(xiaoquinfo_list):
     cursor = conn.cursor()
     for item in xiaoquinfo_list:
         print(item)
-        sql = "INSERT INTO xiaoquinfo (xiaoqu_name, xiaoqu_url, build_time, build_type, pm_price, pm_compnay, build_company, sum_buildings, sum_apartments, avg_price, create_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO xiaoquinfo (xiaoqu_name, xiaoqu_url, build_time, build_type, pm_price, pm_compnay, build_company, sum_buildings, sum_apartments, avg_price, create_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql, item)
     conn.commit()
     conn.close()
