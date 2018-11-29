@@ -6,6 +6,24 @@ dbname = "test"
 '''
 db = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
 cursor = db.cursor()
+sql = """CREATE TABLE xiaoquinfo (
+         ID INT   AUTO_INCREMENT,
+         xiaoqu_name  varCHAR(100) NOT NULL,
+         xiaoqu_url  varCHAR(200) not null,
+         build_time  varCHAR(200) not null,
+         build_type  varCHAR(200) not null,
+         pm_price  varCHAR(200) not null,
+         pm_compnay  varCHAR(200) not null,
+         build_company  varCHAR(200) not null,
+         sum_buildings  varCHAR(200) not null,
+         sum_apartments  varCHAR(200) not null,
+         create_date  date not null,
+         PRIMARY KEY (ID))"""
+cursor.execute(sql)
+db.close()
+
+db = pymysql.connect(host,user,passwd,dbname,charset='utf8' )
+cursor = db.cursor()
 sql = """CREATE TABLE xiaoqu (
          ID INT   AUTO_INCREMENT,
          xiaoqu_name  varCHAR(100) NOT NULL,
